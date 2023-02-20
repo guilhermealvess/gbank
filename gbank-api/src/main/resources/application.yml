@@ -1,0 +1,15 @@
+spring:
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    platform: postgres
+    url: 'jdbc:postgresql://localhost:5432/gbank_db'
+    username: postgres
+    password: '2023'
+  database:
+    driverClassName: org.postgresql.Driver
+server:
+  port: '8080'
