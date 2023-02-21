@@ -11,7 +11,3 @@ import java.util.UUID
 @Repository
 interface ICustomerRepository: PagingAndSortingRepository<Customer, UUID>, CrudRepository<Customer, UUID>, JpaSpecificationExecutor<Customer> {
 }
-
-fun findByName(name: String) {
-    return
-}
