@@ -2,6 +2,8 @@ package com.github.gbank.controllers
 
 import com.github.gbank.dto.CustomerDto
 import com.github.gbank.serives.ICustomerService
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -30,8 +32,8 @@ class CustomerController(private val service: ICustomerService) {
     }
 
     @GetMapping
-    fun search() =
-            ResponseEntity.ok(service.search())
+    fun search(pageable: Pageable) =
+            ResponseEntity.ok(service.search(pageable))
 
     @GetMapping("/{id}")
     fun fetch(@PathVariable("id") id: UUID) =
