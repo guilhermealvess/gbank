@@ -8,7 +8,7 @@ import java.util.*
 interface ICustomerService {
     fun create(customerDto: CustomerDto): CustomerDto
 
-    fun search(pageable: Pageable): Page<CustomerDto>
+    fun search(pageable: Pageable, name: String?, id: UUID?): Page<CustomerDto>
 
     fun findById(id: UUID): CustomerDto
 

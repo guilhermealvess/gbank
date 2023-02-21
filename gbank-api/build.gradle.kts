@@ -7,6 +7,7 @@ plugins {
 	kotlin("plugin.spring") version "1.7.22"
 	kotlin("plugin.jpa") version "1.7.22"
 	kotlin("kapt") version "1.5.10"
+	id("at.comm_unity.gradle.plugins.jpamodelgen") version "1.1.4"
 }
 
 group = "com.github"
@@ -39,7 +40,14 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	implementation("org.mapstruct:mapstruct:1.5.3.Final")
 	kapt("org.mapstruct:mapstruct-processor:1.5.3.Final")
+	//implementation ("org.hibernate:hibernate-jpamodelgen:6.1.7.Final")
+	annotationProcessor ("org.hibernate:hibernate-jpamodelgen:6.1.7.Final")
+
+	kapt("org.hibernate:hibernate-jpamodelgen:6.1.7.Final")
+	kaptTest("org.hibernate:hibernate-jpamodelgen:6.1.7.Final")
+	implementation("org.hibernate:hibernate-jpamodelgen:6.1.7.Final")
 }
+
 
 kapt {
 	arguments {

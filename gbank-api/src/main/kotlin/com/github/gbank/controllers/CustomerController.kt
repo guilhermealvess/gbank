@@ -2,6 +2,8 @@ package com.github.gbank.controllers
 
 import com.github.gbank.dto.CustomerDto
 import com.github.gbank.serives.ICustomerService
+import jakarta.websocket.server.PathParam
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
@@ -22,7 +24,11 @@ import kotlin.NoSuchElementException
 class CustomerController(private val service: ICustomerService) {
     @ExceptionHandler(NoSuchElementException::class)
     fun handlerNoSuchElementException(e: NoSuchElementException) =
-            ResponseEntity.notFound().build<Void>()
+            ResponseEntity(e.message, HttpStatus.NOT_FOUND)
+
+    @ExceptionHandler(IllegalAccessException::class)
+    fun handleBadRequest(e: IllegalArgumentException): ResponseEntity<String> =
+            ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
 
     @PostMapping
     fun create(@RequestBody customerDto: CustomerDto): ResponseEntity<CustomerDto> {
@@ -32,8 +38,9 @@ class CustomerController(private val service: ICustomerService) {
     }
 
     @GetMapping
-    fun search(pageable: Pageable) =
-            ResponseEntity.ok(service.search(pageable))
+    fun search(@PathParam("name") name: String?, @PathParam("id") id: UUID?, pageable: Pageable): ResponseEntity<Page<CustomerDto>> {
+        return ResponseEntity.ok(service.search(pageable, name, id))
+    }
 
     @GetMapping("/{id}")
     fun fetch(@PathVariable("id") id: UUID) =
