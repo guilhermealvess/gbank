@@ -1,4 +1,4 @@
-package com.github.gbank.serives
+package com.github.gbank.services
 
 import com.github.gbank.dto.CustomerDto
 import org.springframework.data.domain.Page

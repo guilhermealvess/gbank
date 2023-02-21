@@ -1,11 +1,11 @@
-package com.github.gbank.serives.impl
+package com.github.gbank.services.impl
 
 import com.github.gbank.dto.CustomerDto
 import com.github.gbank.mappers.CustomerMapper
 import com.github.gbank.models.Customer
 import com.github.gbank.models.Customer_
 import com.github.gbank.repositories.ICustomerRepository
-import com.github.gbank.serives.ICustomerService
+import com.github.gbank.services.ICustomerService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification

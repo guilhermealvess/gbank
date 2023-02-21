@@ -1,11 +1,10 @@
 package com.github.gbank.controllers
 
 import com.github.gbank.dto.CustomerDto
-import com.github.gbank.serives.ICustomerService
+import com.github.gbank.services.ICustomerService
 import jakarta.websocket.server.PathParam
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
-import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
