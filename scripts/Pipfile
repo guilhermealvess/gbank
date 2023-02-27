@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pendulum = "*"
+faker = "*"
+click = "*"
+asyncclick = "*"
+requests = "*"
+requests-async = "*"
+pydantic = {extras = ["dotenv"], version = "*"}
+anyio = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
