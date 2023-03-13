@@ -1,8 +1,8 @@
 package repository
 
-type SqlDB interface {
-	Insert(model any) error
-}
+/* type ClientDB interface {
+	Insert(model T) error
+} */
 
 type Cache interface {
 	Set(key string, value string) error

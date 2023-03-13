@@ -1,77 +1,42 @@
 package repository
 
 import (
-	"encoding/json"
+	"database/sql"
 	"fmt"
-	"time"
 
-	"github.com/google/uuid"
 	"github.com/guilhermealvess/gbank/gbank-auth/internal/entity"
 )
 
 type ApplicationRepository struct {
 	entity.ApplicationRepository
-	sqlDB SqlDB
-	cache Cache
+	db *sql.DB
+	//cache Cache
 }
 
-func NewApplicationRepository(sqlDB SqlDB, cache Cache) *ApplicationRepository {
+func NewApplicationRepository(clientDB *sql.DB /*, cache Cache*/) *ApplicationRepository {
 	return &ApplicationRepository{
-		sqlDB: sqlDB,
-		cache: cache,
+		db: clientDB,
 	}
 }
 
 func (a *ApplicationRepository) Save(application *entity.Application) error {
-	applicationModel := entityToModel(application)
-	err := a.sqlDB.Insert(&applicationModel)
+	sqlStatement := fmt.Sprintf("INSERT INTO application VALUES ($1,$2,$3,$4,$5,$6)")
 
+	insert, err := a.db.Prepare(sqlStatement)
 	if err != nil {
 		return err
 	}
 
-	key := fmt.Sprintf("application:%s", application.ID.String())
-	b, err := json.Marshal(applicationModel)
+	result, err := insert.Exec(application.ID, application.Name, application.Description, application.Status, application.CreatedAt, application.UpdatedAt)
 	if err != nil {
 		return err
 	}
-	value := string(b)
 
-	err = a.cache.Set(key, value)
+	affect, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
 
+	println(affect)
 	return nil
-}
-
-type ApplicationModel struct {
-	ID          uuid.UUID `json:"id"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	PrivateKey  string    `json:"privateKey"`
-	PublicKey   string    `json:"publicKey"`
-	Status      string    `json:"status"`
-	CreatedAt   time.Time `json:"createdAt"`
-}
-
-func entityToModel(a *entity.Application) *ApplicationModel {
-	return &ApplicationModel{
-		ID:          a.ID,
-		Name:        a.Name,
-		Description: a.Description,
-		PrivateKey:  a.PrivateKey,
-		PublicKey:   a.PublicKey,
-		Status:      a.Status,
-		CreatedAt:   a.CreatedAt,
-	}
-}
-
-func modelToEntity(a *ApplicationModel) *entity.Application {
-	return &entity.Application{
-		ID:          a.ID,
-		Name:        a.Name,
-		Description: a.Description,
-		PrivateKey:  a.PrivateKey,
-		PublicKey:   a.PublicKey,
-		Status:      a.Status,
-		CreatedAt:   a.CreatedAt,
-	}
 }

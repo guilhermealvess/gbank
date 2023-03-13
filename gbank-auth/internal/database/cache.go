@@ -9,7 +9,7 @@ import (
 
 type Cache struct {
 	repository.Cache
-	repository.SqlDB
+	//repository.SqlDB
 	client *redis.Client
 }
 

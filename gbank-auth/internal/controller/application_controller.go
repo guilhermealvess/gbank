@@ -1,35 +1,50 @@
 package controller
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/google/uuid"
-	"github.com/guilhermealvess/gbank/gbank-auth/internal/database"
 	"github.com/guilhermealvess/gbank/gbank-auth/internal/repository"
+	"github.com/guilhermealvess/gbank/gbank-auth/internal/usecase"
 	"github.com/labstack/echo"
-	"gorm.io/gorm"
 )
 
 type ApplicationController struct {
-	//db *gorm.DB
-	db_sql *database.SqlDB[repository.ApplicationModel]
+	clientDB *sql.DB
 }
 
-func NewApplicationController(db *gorm.DB) *ApplicationController {
-	db_sql := database.NewSqlDB[repository.ApplicationModel](db)
+func NewApplicationController(db *sql.DB) *ApplicationController {
 	return &ApplicationController{
-		db_sql: db_sql,
+		clientDB: db,
 	}
 }
 
-func CreateApplication(c echo.Context) error {
-	application := new(Application)
+func (a *ApplicationController) CreateApplication(c echo.Context) error {
+	applicationDto := new(ApplicationDTO)
 
-	if err := c.Bind(application); err != nil {
+	if err := c.Bind(applicationDto); err != nil {
 		return err
 	}
 
-	return c.JSON(201, application)
+	applicationRepository := repository.NewApplicationRepository(a.clientDB)
+	u := usecase.NewCreateApplication(applicationRepository)
+	input := &usecase.InputCreateApplication{
+		Name:        applicationDto.Name,
+		Description: applicationDto.Description,
+	}
+
+	output, err := u.ExecuteCreateApplication(input)
+	if err != nil {
+		return c.String(http.StatusBadGateway, err.Error())
+	}
+
+	return c.JSON(201, &ApplicationDTO{
+		ID:          output.ID,
+		Name:        output.Name,
+		Description: output.Description,
+		Status:      output.Status,
+	})
 }
 
 func GetApplicationById(c echo.Context) error {
@@ -40,11 +55,4 @@ func GetApplicationById(c echo.Context) error {
 	}
 
 	return c.String(http.StatusOK, id.String())
-}
-
-type Application struct {
-	ID          uuid.UUID `json:"id"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	Status      string    `json:"status"`
 }

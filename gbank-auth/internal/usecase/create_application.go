@@ -9,6 +9,12 @@ type CreateApplication struct {
 	repository entity.ApplicationRepository
 }
 
+func NewCreateApplication(repo entity.ApplicationRepository) *CreateApplication {
+	return &CreateApplication{
+		repository: repo,
+	}
+}
+
 func (c *CreateApplication) ExecuteCreateApplication(input *InputCreateApplication) (*OutputCreateApplication, error) {
 	application := entity.NewApplication(input.Name, input.Description)
 	err := c.repository.Save(application)

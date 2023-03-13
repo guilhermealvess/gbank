@@ -14,6 +14,7 @@ type Application struct {
 	PublicKey   string
 	Status      string
 	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 func NewApplication(name string, description string) *Application {
@@ -27,6 +28,8 @@ func NewApplication(name string, description string) *Application {
 		Description: description,
 		PrivateKey:  privateKey,
 		PublicKey:   publicKey,
+		Status:      "created",
 		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
 	}
 }
